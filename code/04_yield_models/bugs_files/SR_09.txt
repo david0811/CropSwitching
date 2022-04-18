@@ -1,0 +1,75 @@
+model {
+  # Model Level 1 #
+  for (i in 1:(ncounties-1))
+  {
+    for (t in 1:nyrs)
+    {
+      Y[t,i] ~ dnorm(alpha[i] + 
+                       beta1[i]*Technology[t,1] + 
+                       beta2[i]*GDD[t,i] + 
+                       beta3[i]*EDD[t,i] + 
+                       beta4[i]*P[t,i] + 
+                       beta5[i]*P2[t,i],
+                       tau.y)
+    }
+  }
+  
+  # Model Level 2 #
+  for (i in 1:(ncounties))
+  {
+    alpha[i] ~ dnorm(a0 + inprod(b0,covariates[i,]),tau.alpha)
+    beta1[i] ~ dnorm(a1 + inprod(b1,covariates[i,]),tau.beta1)
+    beta2[i] ~ dnorm(a2 + inprod(b2,covariates[i,]),tau.beta2)
+    beta3[i] ~ dnorm(a3 + inprod(b3,covariates[i,]),tau.beta3)
+    beta4[i] ~ dnorm(a4 + inprod(b4,covariates[i,]),tau.beta4)
+    beta5[i] ~ dnorm(a5 + inprod(b5,covariates[i,]),tau.beta5)
+  }
+  
+  # Priors #
+  #for (i in 1:(ncounties))
+  #{
+  tau.y ~ dgamma(0.0001,0.0001)
+  #}
+  
+  #tau.alpha ~ dgamma(0.001,0.001)
+  #tau.beta1 ~ dgamma(0.001,0.001)
+  #tau.beta2 ~ dgamma(0.001,0.001)
+  #tau.beta3 ~ dgamma(0.001,0.001)
+  #tau.beta4 ~ dgamma(0.001,0.001)
+  #tau.beta5 ~ dgamma(0.001,0.001)
+  
+  tau.alpha <- pow(sigma.alpha,-2)
+  sigma.alpha ~ dunif(0,100)
+  
+  tau.beta1 <- pow(sigma.beta1,-2)
+  sigma.beta1 ~ dunif(0,100)
+  
+  tau.beta2 <- pow(sigma.beta2,-2)
+  sigma.beta2 ~ dunif(0,100)
+  
+  tau.beta3 <- pow(sigma.beta3,-2)
+  sigma.beta3 ~ dunif(0,100)
+  
+  tau.beta4 <- pow(sigma.beta4,-2)
+  sigma.beta4 ~ dunif(0,100)
+  
+  tau.beta5 <- pow(sigma.beta5,-2)
+  sigma.beta5 ~ dunif(0,100)
+  
+  a0 ~ dnorm(0, 0.01)
+  a1 ~ dnorm(0, 0.01)
+  a2 ~ dnorm(0, 0.01)
+  a3 ~ dnorm(0, 0.01)
+  a4 ~ dnorm(0, 0.01)
+  a5 ~ dnorm(0, 0.01)
+  
+  for (i in 1:ncovs)
+  {
+    b0[i] ~ dnorm(0, 0.01)
+    b1[i] ~ dnorm(0, 0.01)
+    b2[i] ~ dnorm(0, 0.01)
+    b3[i] ~ dnorm(0, 0.01)
+    b4[i] ~ dnorm(0, 0.01)
+    b5[i] ~ dnorm(0, 0.01)
+  }
+}
